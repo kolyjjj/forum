@@ -9,7 +9,7 @@ const cache = new Cache();
 
 
 gulp.task('compile',  () => {
-  return gulp.src(['app.js', 'src/**/*.js'])
+  return gulp.src(['app.js', 'src/**/*.js'], {base: '.'})
         .pipe(cache.filter())
         .pipe(babel({
          presets: ['es2015']
