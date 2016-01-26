@@ -1,0 +1,25 @@
+{
+  "name": "forum",
+  "version": "0.0.1",
+  "description": "a forum made in expressJS",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kolyjjj/forum.git"
+  },
+  "keywords": [
+    "expressjs"
+  ],
+  "author": "koly",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kolyjjj/forum/issues"
+  },
+  "homepage": "https://github.com/kolyjjj/forum",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
