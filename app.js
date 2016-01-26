@@ -1,5 +1,5 @@
-import * as Express from 'express'; 
-let express = Express();
+import express from 'express'; 
+let app = express();
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
