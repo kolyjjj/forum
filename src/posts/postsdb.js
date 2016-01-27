@@ -39,7 +39,8 @@ let aBlog = new Blog({
 console.log(aBlog.title + '->' + aBlog.author + '->' + aBlog.body);
 
 const postsdb = {
-    save() {
+    save(data) {
+        const aBlog = new Blog(data);
         return aBlog.save();    
     }
 };
