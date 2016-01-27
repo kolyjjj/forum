@@ -8,6 +8,15 @@ router.use(function timeLog(req, res, next){
     next();
 });
 
+router.all('*', (req, res, next) => {
+    const contentType = req.get('Content-Type');
+    console.log('Content-Type', contentType, contentType.includes('application/json'));
+    if (contentType && contentType.includes('application/json')) 
+        next();
+    else 
+        res.status(400).send('wrong Content-Type, should be Content-Type:application/json, yours is ' + contentType);
+});
+
 router.get('/', (req, res) => {
     res.send('hello, here is the api');
 });
