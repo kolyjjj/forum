@@ -24,19 +24,6 @@ const blogSchema = new Schema({
 });
 
 const Blog = mongoose.model('Blog', blogSchema);
-let aBlog = new Blog({
-    title: 'first blog',
-    author: 'koly',
-    body: 'What a beautiful world',
-    comments: [{body: 'a comment', date: Date.now()}],
-    hidden: false,
-    meta: {
-        votes: 1,
-    favs: 1
-    }
-});
-
-console.log(aBlog.title + '->' + aBlog.author + '->' + aBlog.body);
 
 const postsdb = {
     save(data) {

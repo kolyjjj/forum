@@ -12,16 +12,11 @@ router.get('/', (req, res) => {
 
 router.post('/save', (req, res) => {
     console.log(req.body);
-    res.send(req.body);
-    /*
-       postsdb.save().then((data) => {
-       console.log('succeed');
-       console.log(data);
-       res.status(200).json(data);
-       }, (err)=>{
-       res.status(500).json(err);
-       });
-       */
+    postsdb.save(req.body).then((data) => {
+        res.status(200).json({id: data._id});
+    }, (err)=>{
+        res.status(500).json(err);
+    });
 });
 
 export default router;
