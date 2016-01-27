@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import dbConfig from '../../env/db_config';
 
-const dburl = 'mongodb://192.168.99.100/test';
-mongoose.connect(dburl);
+//const dburl = 'mongodb://192.168.99.100/test';
+mongoose.connect(dbConfig.url);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
