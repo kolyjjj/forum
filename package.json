@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/kolyjjj/forum",
   "dependencies": {
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "mongoose": "^4.3.7"
   },
   "devDependencies": {
     "babel-core": "^6.4.5",
