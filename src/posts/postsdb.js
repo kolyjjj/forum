@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import dbConfig from '../../env/db_config';
 
-//const dburl = 'mongodb://192.168.99.100/test';
 mongoose.connect(dbConfig.url);
 
 const db = mongoose.connection;
@@ -41,7 +40,8 @@ console.log(aBlog.title + '->' + aBlog.author + '->' + aBlog.body);
 
 const postsdb = {
     save() {
-        return aBlog.save();    }
+        return aBlog.save();    
+    }
 };
 
 export default postsdb;
