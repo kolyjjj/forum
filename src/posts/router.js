@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
     //postsdb.getAllPosts().then((data)=>{
     //    res.status(200).json(data);
     //    });
-    //res.status(200).send('posts');
+    res.send('posts');
 });
 
 router.post('/save', (req, res) => {

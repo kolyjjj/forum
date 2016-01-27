@@ -10,11 +10,16 @@ router.use(function timeLog(req, res, next){
 });
 
 router.all('*', function onlyAllowJson(req, res, next) {
-    const contentType = req.get('Content-Type');
-    if (contentType && contentType.includes('application/json')) 
+    const method = req.method;
+    console.log(method, typeof method);
+    if (lodash.includes(['GET'], method)) next();
+    else {
+        const contentType = req.get('Content-Type');
+        if (contentType && contentType.includes('application/json')) 
     next();
-    else 
+        else 
     res.status(400).send('wrong Content-Type, should be Content-Type:application/json, yours is ' + contentType);
+    }
 });
 
 router.post('*', function postShouldHasContent(req, res, next) {
