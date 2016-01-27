@@ -8,9 +8,8 @@ router.use(function timeLog(req, res, next){
     next();
 });
 
-router.all('*', (req, res, next) => {
+router.all('*', function onlyAllowJson(req, res, next) {
     const contentType = req.get('Content-Type');
-    console.log('Content-Type', contentType, contentType.includes('application/json'));
     if (contentType && contentType.includes('application/json')) 
         next();
     else 
