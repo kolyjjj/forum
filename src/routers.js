@@ -11,7 +11,6 @@ router.use(function timeLog(req, res, next){
 
 router.all('*', function onlyAllowJson(req, res, next) {
   const method = req.method;
-  console.log(method, typeof method);
   if (lodash.includes(['GET'], method)) next();
   else {
     const contentType = req.get('Content-Type');
@@ -30,7 +29,7 @@ router.post('*', function postShouldHasContent(req, res, next) {
 });
 
 router.get('/', (req, res) => {
-  res.send('hello, here is the api');
+  res.send('hello, welcome to the api');
 });
 
 router.use('/posts/', postRouter); 
