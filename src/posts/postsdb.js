@@ -11,7 +11,11 @@ db.once('open', () => {
 
 const Schema = mongoose.Schema;
 const blogSchema = new Schema({
-  title: String, 
+  title:{
+    type: String,
+    required: true,
+    minlength: 4
+  }, 
   author: String, 
   body: String,
   comments: [{body: String, date: Date}],
