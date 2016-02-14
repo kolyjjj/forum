@@ -14,10 +14,19 @@ const blogSchema = new Schema({
   title:{
     type: String,
     required: '{PATH} cannot be empty.', // PATH must be uppercase
-    minlength: 4
+    minlength: [4, '{PATH} should be more than 4 characters.']
   }, 
-  author: String, 
-  body: String,
+  author: {
+    type: String,
+    required: '{PATH} cannot be empty.', 
+    minlength: [2, '{PATH} should be more than 2 characters.'],
+    maxlength: [40, '{PATH} should be less than 40 characters.']
+  }, 
+  content: {
+    type: String,
+    required: '{PATH} cannot be empty.',
+    minlength: [15, '{PATH} should be more than 15 characters.']
+  },
   comments: [{body: String, date: Date}],
   date: {type: Date, default: Date.now},
   hidden: Boolean,
