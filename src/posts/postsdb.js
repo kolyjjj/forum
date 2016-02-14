@@ -41,10 +41,13 @@ const Blog = mongoose.model('Blog', blogSchema);
 const postsdb = {
   save(data) {
     const aBlog = new Blog(data);
-    return aBlog.save();    
+    return aBlog.save(); 
   },
   getAll() {
     return Blog.find({});
+  },
+  getOne(id) {
+    return Blog.findById(id);
   }
 };
 

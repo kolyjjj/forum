@@ -1,5 +1,6 @@
 import express from 'express';
 import postsdb from './postsdb';
+import lodash from 'lodash';
 
 const router = express.Router();
 
@@ -17,6 +18,19 @@ router.get('/', (req, res) => {
   }, (err)=>{
     console.log('error when getting all posts', err);
     res.status(500).send(err);
+  });
+});
+
+router.get('/:id', (req, res) => {
+  postsdb.getOne(req.params.id).then((data)=>{
+    if (lodash.isEmpty(data)) {
+      console.log('cannot find post with id', req.params.id);
+      res.status(404).send();
+    } else
+      res.status(200).json(data);
+  }, (err)=>{
+    console.log('error getting post', err);
+    res.status(404).send();
   });
 });
 
