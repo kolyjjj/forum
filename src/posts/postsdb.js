@@ -13,7 +13,7 @@ const Schema = mongoose.Schema;
 const blogSchema = new Schema({
   title:{
     type: String,
-    required: true,
+    required: '{PATH} cannot be empty.', // PATH must be uppercase
     minlength: 4
   }, 
   author: String, 

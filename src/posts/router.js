@@ -3,6 +3,14 @@ import postsdb from './postsdb';
 
 const router = express.Router();
 
+let composeErrorJson = (errors) => {
+  let result = {};
+  for (let key in errors) {
+    result[key] = errors[key].message;
+  }
+  return result;
+}
+
 router.get('/', (req, res) => {
   postsdb.getAll().then((data)=>{
     res.status(200).send(data);
@@ -18,8 +26,10 @@ router.post('/', (req, res) => {
     res.status(200).json({id: data._id});
   }, (err)=>{
     console.log('creating post error', err);
-    if ('ValidationError' === err.name)
-      res.status(400).send();
+    if ('ValidationError' === err.name) {
+      let errorMessages = composeErrorJson(err.errors);
+      res.status(400).json(errorMessages);
+    }
     else res.status(500).json(err);
   });
 });
