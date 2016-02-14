@@ -7,10 +7,17 @@ router.get('/', (req, res) => {
     //postsdb.getAllPosts().then((data)=>{
     //    res.status(200).json(data);
     //    });
-    res.send('posts');
+    postsdb.getAll().then((data)=>{
+        console.log('getting all data');
+        console.log(data);
+        res.status(200).send(data);
+    }, (err)=>{
+        console.log(err);
+        res.status(500).send(err);
+    });
 });
 
-router.post('/save', (req, res) => {
+router.post('/', (req, res) => {
     console.log(req.body);
     postsdb.save(req.body).then((data) => {
         res.status(200).json({id: data._id});

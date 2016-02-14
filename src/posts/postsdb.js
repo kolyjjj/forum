@@ -6,30 +6,33 @@ mongoose.connect(dbConfig.url);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-    console.log('connected to mongodb');
+  console.log('connected to mongodb');
 });
 
 const Schema = mongoose.Schema;
 const blogSchema = new Schema({
-    title: String, 
-      author: String, 
-      body: String,
-      comments: [{body: String, date: Date}],
-      date: {type: Date, default: Date.now},
-      hidden: Boolean,
-      meta: {
-          votes: Number,
-      favs: Number
-      }
+  title: String, 
+  author: String, 
+  body: String,
+  comments: [{body: String, date: Date}],
+  date: {type: Date, default: Date.now},
+  hidden: Boolean,
+  meta: {
+    votes: Number,
+    favs: Number
+  }
 });
 
 const Blog = mongoose.model('Blog', blogSchema);
 
 const postsdb = {
-    save(data) {
-        const aBlog = new Blog(data);
-        return aBlog.save();    
-    }
+  save(data) {
+    const aBlog = new Blog(data);
+    return aBlog.save();    
+  },
+  getAll() {
+    return Blog.find({});
+  }
 };
 
 export default postsdb;
