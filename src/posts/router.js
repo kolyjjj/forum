@@ -10,7 +10,16 @@ let composeErrorJson = (errors) => {
     result[key] = errors[key].message;
   }
   return result;
-}
+};
+
+let createResponseWhenPostNotFound = (data, id, res, successFunc) => {
+  if (lodash.isEmpty(data)) {
+    console.log('cannot find post with id', id);
+    res.status(404).send();
+  } else {
+    successFunc(data);
+  } 
+};
 
 router.get('/', (req, res) => {
   postsdb.getAll().then((data)=>{
@@ -23,11 +32,9 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   postsdb.getOne(req.params.id).then((data)=>{
-    if (lodash.isEmpty(data)) {
-      console.log('cannot find post with id', req.params.id);
-      res.status(404).send();
-    } else
+    createResponseWhenPostNotFound(data, req.params.id, res, (data)=>{
       res.status(200).json(data);
+    });
   }, (err)=>{
     console.log('error getting post', err);
     res.status(404).send();
@@ -36,10 +43,12 @@ router.get('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   postsdb.deleteOne(req.params.id).then((data)=>{
-    res.status(200).send();
+    createResponseWhenPostNotFound(data, req.params.id, res, (data)=>{
+      res.status(200).send();
+    });
   }, (err)=>{
     console.log('error deleting post', err);
-    res.status(500).send();
+    res.status(404).send();
   });
 });
 
