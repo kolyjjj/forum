@@ -34,6 +34,15 @@ router.get('/:id', (req, res) => {
   });
 });
 
+router.delete('/:id', (req, res) => {
+  postsdb.deleteOne(req.params.id).then((data)=>{
+    res.status(200).send();
+  }, (err)=>{
+    console.log('error deleting post', err);
+    res.status(500).send();
+  });
+});
+
 router.post('/', (req, res) => {
   console.log('request body for creating post', req.body);
   postsdb.save(req.body).then((data) => {
