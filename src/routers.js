@@ -11,7 +11,7 @@ router.use(function timeLog(req, res, next){
 
 router.all('*', function onlyAllowJson(req, res, next) {
   const method = req.method;
-  if (lodash.includes(['GET'], method)) next();
+  if (lodash.includes(['GET', 'DELETE'], method)) next();
   else {
     const contentType = req.get('Content-Type');
     if (contentType && contentType.includes('application/json')) 
