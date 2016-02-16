@@ -5,6 +5,7 @@ import babel from 'gulp-babel';
 import nodemon from 'gulp-nodemon';
 import Cache from 'gulp-file-cache';
 import minimist from 'minimist';
+import mocha from 'gulp-mocha';
 
 const cache = new Cache();
 const knownOptions = {
@@ -41,3 +42,17 @@ gulp.task('start', ['compile'], () => {
     tasks: ['compile']
   });
 });
+
+gulp.task('testCompile', ()=>{
+  return gulp.src(['app.js', 'src/**/*.js', 'test/**/*.js'], {base: '.'})
+  .pipe(babel({
+    presets: ['es2015']
+  }))
+  .pipe(gulp.dest('tmp'));
+});
+
+gulp.task('test', ['testCompile'], () => {
+  return gulp.src('tmp/test/**/*.spec.js', {read:false})
+  // gulp-mocha needs filepaths so you can't have any plugins before it
+  .pipe(mocha({reporter:'nyan'}));
+})
