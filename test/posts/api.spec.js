@@ -2,6 +2,7 @@
 
 import request from 'supertest';
 import should from 'should';
+import async from 'async';
 import app from '../../app';
 
 describe('/api/posts', ()=>{
@@ -14,15 +15,24 @@ describe('/api/posts', ()=>{
     "meta": {}
   };
 
-  //after(function(done)=>{
-    //request(app)
-    //.get('/api/posts')
-    //.expect('Content-Type', /json/)
-    //.end((err, res)=>{
-      //if (err) throw err;
-
-    //})
-  //})
+  after(function(done){
+    request(app)
+    .get('/api/posts')
+    .expect('Content-Type', /json/)
+    .end((err, res)=>{
+      if (err) throw err;
+      let deleteFuncs = [];
+      res.body.forEach((value)=>{
+        deleteFuncs.push((cb)=>{
+          console.log('deleting', value._id);
+          request(app)
+          .delete('/api/posts/'+value._id)
+          .expect(200, cb);
+        });
+      });
+      async.series(deleteFuncs, done);
+    });
+  });
 
   it('should get posts', function(done){
     request(app)
