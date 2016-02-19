@@ -43,6 +43,15 @@ const postsdb = {
     const aBlog = new Blog(data);
     return aBlog.save(); 
   },
+  update(id, data) {
+    return Blog.findByIdAndUpdate(id, {
+      title: data.title,
+      content: data.content
+    }, {
+      new: true,
+      runValidators: true
+    });
+  },
   getAll() {
     return Blog.find({});
   },

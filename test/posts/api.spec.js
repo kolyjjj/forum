@@ -79,6 +79,33 @@ describe('/api/posts', ()=>{
     });
   });
 
+  it('should update a post', function(done){
+    request(app)
+    .post('/api/posts')
+    .send(aPost)
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end((err, res)=>{
+      if (err) throw err;
+      request(app)
+      .put('/api/posts/' + res.body.id)
+      .send({
+       "title":"updated post",
+       "author":"another author",
+       "content":"updated posts content"
+      })
+      .expect('Content-Type', /json/)
+      .expect((res)=>{
+        console.log('updating a post');
+        let body = res.body;
+        body.title.should.be.exactly("updated post");
+        body.author.should.be.exactly(aPost.author); // author cannot be udpated
+        body.content.should.be.exactly("updated posts content");
+      })
+      .expect(200, done);
+    });
+  });
+
   it('should delete a post', function(done){
     request(app)
     .post('/api/posts')

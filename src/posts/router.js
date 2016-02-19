@@ -66,4 +66,19 @@ router.post('/', (req, res) => {
   });
 });
 
+router.put('/:id', (req, res)=>{
+  console.log('request body for updating post', req.body);
+  postsdb.update(req.params.id, req.body).then((data)=>{
+    createResponseWhenPostNotFound(data, req.params.id, res, (data)=>{
+      res.status(200).json(data);
+    });
+  }, (err)=>{
+    if ('ValidationError' === err.name) {
+      let errorMessages = composeErrorJson(err.errors);
+      res.status(400).json(errorMessages);
+    }
+    else res.status(500).json(err);
+  })
+})
+
 export default router;
