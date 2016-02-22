@@ -96,11 +96,12 @@ describe('/api/posts', ()=>{
       })
       .expect('Content-Type', /json/)
       .expect((res)=>{
-        console.log('updating a post');
         let body = res.body;
         body.title.should.be.exactly("updated post");
         body.author.should.be.exactly(aPost.author); // author cannot be udpated
         body.content.should.be.exactly("updated posts content");
+        let timeDiff = Date.parse(body.last_edit_date) - Date.now();
+        timeDiff.should.be.lessThan(10000); // 10000 is of scale milliseconds, which is 10 seconds
       })
       .expect(200, done);
     });

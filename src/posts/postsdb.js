@@ -28,7 +28,8 @@ const blogSchema = new Schema({
     minlength: [15, '{PATH} should be more than 15 characters.']
   },
   comments: [{body: String, date: Date}],
-  date: {type: Date, default: Date.now},
+  created_date: {type: Date, default: Date.now},
+  last_edit_date: {type: Date, default: Date.now},
   hidden: Boolean,
   meta: {
     votes: Number,
@@ -46,7 +47,8 @@ const postsdb = {
   update(id, data) {
     return Blog.findByIdAndUpdate(id, {
       title: data.title,
-      content: data.content
+      content: data.content,
+      last_edit_date: Date.now()
     }, {
       new: true,
       runValidators: true
