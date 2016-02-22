@@ -10,6 +10,6 @@ gulp start
 gulp test
 
 ### file structure
-* configurations goes into config/
+* configurations goes into env/<environment>/
 * tests go to test/
 * source codes go to src/ and each directory inside represents one feature, e.g. posts represents CRUD for post.
