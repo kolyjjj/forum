@@ -1,16 +1,6 @@
-import mongoose from 'mongoose';
-import dbConfig from '../../env/db_config';
+import createModel from '../database/index';
 
-mongoose.connect(dbConfig.url);
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('connected to mongodb');
-});
-
-const Schema = mongoose.Schema;
-const blogSchema = new Schema({
+const schema = {
   title:{
     type: String,
     required: '{PATH} cannot be empty.', // PATH must be uppercase
@@ -35,9 +25,9 @@ const blogSchema = new Schema({
     votes: Number,
     favs: Number
   }
-});
+};
 
-const Blog = mongoose.model('Blog', blogSchema);
+const Blog = createModel('Blog', schema);
 
 const postsdb = {
   save(data) {
