@@ -1,3 +1,5 @@
+'use strict';
+
 import createModel from '../database/index';
 
 const schema = {
