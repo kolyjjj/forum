@@ -6,11 +6,15 @@ import commentsdb from './commentsdb';
 const router = express.Router({mergeParams: true});
 
 router.get('/', (req, res)=>{
-  res.status(200).send('hello, comments');
+  commentsdb.getAll(req.params.id).then((data)=>{
+    res.status(200).json(data);
+  }, (err)=>{
+    console.log('failed to get all comments', err);
+    res.status(500).send();
+  });
 });
 
 router.post('/', (req, res)=>{
-  console.log('request params', req.params);
   let aComment = Object.assign({postId:req.params.id}, req.body); 
   commentsdb.save(aComment).then((data)=>{
     console.log('creating comment successfully', data);

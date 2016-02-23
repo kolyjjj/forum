@@ -17,6 +17,17 @@ describe('comments operation', ()=>{
     "author":"koly",
     "content":"this is a comment"
   };
+  let postId;
+
+  before(function(done){
+    request(app)
+    .post('/api/posts')
+    .send(aPost)
+    .expect((res)=>{
+      postId = res.body.id;
+    })
+    .expect(200, done);
+  });
 
   it('should create a comment', function(done){
     request(app)
@@ -25,13 +36,28 @@ describe('comments operation', ()=>{
     .expect(200)
     .end((err, res)=>{
       if (err) throw err;
-      console.log('post id', res.body.id);
       request(app)
       .post('/api/posts/' + res.body.id + '/comments')
       .send(aComment)
       .expect('Content-Type', /json/)
       .expect((res)=>{
         res.body.should.have.property('_id');
+      })
+      .expect(200, done);
+    });
+  });
+
+  it('should get comments belong to a post', function(done){
+    request(app)
+    .post('/api/posts/'+postId+'/comments')
+    .send(aComment)
+    .expect(200)
+    .end((err, res)=>{
+      if (err) throw err;
+      request(app)
+      .get('/api/posts/'+postId+'/comments')
+      .expect((res)=>{
+        res.body.should.be.an.instanceOf(Array);
       })
       .expect(200, done);
     });

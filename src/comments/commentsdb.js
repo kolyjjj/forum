@@ -39,6 +39,9 @@ const commentsdb = {
       last_edit_date: Date.now()
     });
     return aComment.save();
+  },
+  getAll(postId) {
+   return Comment.find({post_id: postId});
   }
 };
 
