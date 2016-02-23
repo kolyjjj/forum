@@ -36,4 +36,9 @@ router.get('/', (req, res) => {
 router.use('/posts/', postRouter); 
 router.use('/posts/:id/comments/', commentRouter);
 
+router.post('*', (req, res, next)=>{
+  console.log('inceptor request', req.method, req.path);
+  res.status(404).send();
+});
+
 export default router;

@@ -2,6 +2,7 @@
 
 import express from 'express';
 import commentsdb from './commentsdb';
+import lodash from 'lodash';
 
 const router = express.Router({mergeParams: true});
 
@@ -14,10 +15,11 @@ router.get('/', (req, res)=>{
   });
 });
 
-router.post('/', (req, res)=>{
+router.post('/', (req, res, next)=>{
   let aComment = Object.assign({postId:req.params.id}, req.body); 
   commentsdb.save(aComment).then((data)=>{
-    console.log('creating comment successfully', data);
+    if (lodash.isEmpty(data)) return next();
+    console.log('sending 200');
     res.status(200).send(data);
   }, (err)=>{
     console.log('fail to create comment', err);
