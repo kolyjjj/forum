@@ -1,8 +1,9 @@
 'use strict';
 
 import express from 'express';
-import commentsdb from './commentsdb';
 import lodash from 'lodash';
+import commentsdb from './commentsdb';
+import postsdb from '../posts/postsdb';
 
 const router = express.Router({mergeParams: true});
 
@@ -16,14 +17,20 @@ router.get('/', (req, res)=>{
 });
 
 router.post('/', (req, res, next)=>{
-  let aComment = Object.assign({postId:req.params.id}, req.body); 
-  commentsdb.save(aComment).then((data)=>{
+  postsdb.getOne(req.params.id)
+  .then((data)=>{
     if (lodash.isEmpty(data)) return next();
-    console.log('sending 200');
-    res.status(200).send(data);
+
+    let aComment = Object.assign({postId:req.params.id}, req.body); 
+    commentsdb.save(aComment).then((data)=>{
+      if (lodash.isEmpty(data)) return next();
+      res.status(200).send(data);
+    }, (err)=>{
+      console.log('fail to create comment', err);
+      res.status(400).send();
+    });
   }, (err)=>{
-    console.log('fail to create comment', err);
-    res.status(400).send();
+    res.status(404).json({message: 'cannot find post id.'});
   });
 });
 
