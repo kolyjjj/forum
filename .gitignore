@@ -3,3 +3,5 @@ dist/
 .gulp-cache
 tags
 tmp/
+.idea/
+*.iml
