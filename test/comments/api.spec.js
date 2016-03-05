@@ -47,6 +47,24 @@ describe('comments operation', ()=>{
     });
   });
 
+  it('should update a comment', function(done){
+    request(app)
+    .post('/api/posts/'+postId+'/comments')
+    .send(aComment)
+    .expect(200)
+    .end((err, res) => {
+      request(app)
+      .put('/api/posts/'+postId+'/comments/'+res.body._id)
+      .send({"author":"haha", "content":"hahahaha, comment"})
+      .expect(res => {
+        let body = res.body;
+        body.author.should.be.exactly('haha');
+        body.content.should.be.exactly('hahahaha, comment');
+      })
+      .expect(200, done);
+    })
+  })
+
   it('should get comments belong to a post', function(done){
     request(app)
     .post('/api/posts/'+postId+'/comments')

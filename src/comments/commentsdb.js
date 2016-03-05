@@ -40,6 +40,17 @@ const commentsdb = {
     });
     return aComment.save();
   },
+  update(id, data) {
+    console.log('commentsdb updating', id, data);
+    return Comment.findByIdAndUpdate(id, {
+      author: data.author,
+      content: data.content,
+      last_edit_date: Date.now()
+    }, {
+      new: true,
+      runValidator: true
+    });
+  },
   getAll(postId) {
    return Comment.find({post_id: postId});
   }

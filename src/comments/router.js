@@ -23,7 +23,6 @@ router.post('/', (req, res, next)=>{
 
     let aComment = Object.assign({postId:req.params.id}, req.body); 
     commentsdb.save(aComment).then((data)=>{
-      if (lodash.isEmpty(data)) return next();
       res.status(200).send(data);
     }, (err)=>{
       console.log('fail to create comment', err);
@@ -32,6 +31,25 @@ router.post('/', (req, res, next)=>{
   }, (err)=>{
     res.status(404).json({message: 'cannot find post id.'});
   });
+});
+
+router.put('/:commentId', (req, res, next) => {
+ postsdb.getOne(req.params.id)
+ .then(data => {
+   if (lodash.isEmpty(data)) return next();
+
+   let newComment = req.body;
+   commentsdb.update(req.params.commentId, newComment)
+   .then(data=>{
+     res.status(200).send(data);
+   }, err => {
+     console.log('fail to update comment', err);
+     res.status(400).send();
+   });
+ }, err => {
+   console.log('updating comments ' + req.params.commentId + ' error with post id ' + req.params.id);
+   res.status(404).json({message: 'cannot find post id.'});
+ });
 });
 
 export default router;
