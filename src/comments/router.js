@@ -19,23 +19,16 @@ router.get('/', (req, res)=>{
 
 router.post('/', (req, res, next)=>{
   co(function *(){
-    console.log('co is running');
-  })
-  .catch(err => console.log('error', err));
-
-  postsdb.getOne(req.params.id)
-  .then((data)=>{
-    if (lodash.isEmpty(data)) return next();
-
+    let aPost = yield postsdb.getOne(req.params.id);
+    if (lodash.isEmpty(aPost)) return next();
     let aComment = Object.assign({postId:req.params.id}, req.body); 
-    commentsdb.save(aComment).then((data)=>{
-      res.status(200).send(data);
-    }, (err)=>{
-      console.log('fail to create comment', err);
-      res.status(400).send();
-    });
-  }, (err)=>{
-    res.status(404).json({message: 'cannot find post id.'});
+    let result = yield commentsdb.save(aComment);
+    res.status(200).send(result);
+  })
+  .catch(err => {
+    console.log('err', err);
+    if (err.kind === 'ObjectId') return res.status(404).json({message: 'cannot find post id'});
+    res.status(400).json({message:'valiation error'});
   });
 });
 
