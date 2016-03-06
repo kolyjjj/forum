@@ -2,6 +2,7 @@
 
 import express from 'express';
 import lodash from 'lodash';
+import co from 'co';
 import commentsdb from './commentsdb';
 import postsdb from '../posts/postsdb';
 
@@ -17,6 +18,11 @@ router.get('/', (req, res)=>{
 });
 
 router.post('/', (req, res, next)=>{
+  co(function *(){
+    console.log('co is running');
+  })
+  .catch(err => console.log('error', err));
+
   postsdb.getOne(req.params.id)
   .then((data)=>{
     if (lodash.isEmpty(data)) return next();
