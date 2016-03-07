@@ -62,8 +62,8 @@ describe('comments operation', ()=>{
         body.content.should.be.exactly('hahahaha, comment');
       })
       .expect(200, done);
-    })
-  })
+    });
+  });
 
   it('should get comments belong to a post', function(done){
     request(app)
@@ -80,4 +80,17 @@ describe('comments operation', ()=>{
       .expect(200, done);
     });
   });
+
+  it.only('should delete a comment', function(done){
+    request(app)
+    .post('/api/posts/'+postId+'/comments')
+    .send(aComment)
+    .expect(200)
+    .end((err, res) => {
+      request(app)
+      .delete('/api/posts/'+postId+'/comments/'+res.body._id)
+      .expect(200, done);
+    });
+  });
+
 });

@@ -53,6 +53,9 @@ const commentsdb = {
   },
   getAll(postId) {
    return Comment.find({post_id: postId});
+  },
+  deleteOne(commentId) {
+    return Comment.findByIdAndRemove(commentId);
   }
 };
 

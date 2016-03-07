@@ -51,4 +51,14 @@ router.put('/:commentId', (req, res, next) => {
   });
 });
 
+router.delete('/:commentId', wrap(async function (req, res, next) {
+ try {
+   await commentsdb.deleteOne(req.params.commentId);
+   res.status(200).send();
+ } catch (err) {
+   console.log('delete comment error', err);
+   res.status(404).json({message: 'comment not found'});
+ }
+}));
+
 export default router;
