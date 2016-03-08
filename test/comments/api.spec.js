@@ -81,7 +81,7 @@ describe('comments operation', ()=>{
     });
   });
 
-  it.only('should delete a comment', function(done){
+  it('should delete a comment', function(done){
     request(app)
     .post('/api/posts/'+postId+'/comments')
     .send(aComment)

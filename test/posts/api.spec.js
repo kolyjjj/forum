@@ -121,4 +121,41 @@ describe('/api/posts', ()=>{
       .expect(200, done);
     });
   });
+
+  it('should delete a post with comments', function(done){
+    const aComment = {
+      "author":"koy",
+      "content":"this is a comment"
+    };
+    let postId;
+    request(app)
+    .post('/api/posts')
+    .send(aPost)
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end((err, res)=>{
+      if (err) throw err;
+      postId = res.body.id;
+      request(app)
+      .post('/api/posts/'+postId+'/comments')
+      .send(aComment)
+      .expect(200)
+      .end((err, res)=>{
+        if (err) throw err;
+        request(app)
+        .delete('/api/posts/'+postId)
+        .expect(200)
+        .end((err, res)=>{
+          if (err) throw err;
+          request(app)
+          .get('/api/posts/'+postId+'/comments')
+          .expect(200)
+          .expect((res)=>{
+            res.body.should.be.deepEqual([]);
+          })
+          .end(done);
+        });
+      });
+    });
+  });
 });

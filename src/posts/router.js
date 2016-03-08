@@ -1,6 +1,8 @@
 import express from 'express';
-import postsdb from './postsdb';
 import lodash from 'lodash';
+import postsdb from './postsdb';
+import {wrap} from '../utils/utils';
+import commentsdb from '../comments/commentsdb';
 
 const router = express.Router();
 
@@ -41,16 +43,25 @@ router.get('/:id', (req, res) => {
   });
 });
 
-router.delete('/:id', (req, res) => {
-  postsdb.deleteOne(req.params.id).then((data)=>{
-    createResponseWhenPostNotFound(data, req.params.id, res, (data)=>{
-      res.status(200).send();
-    });
-  }, (err)=>{
-    console.log('error deleting post', err);
+router.delete('/:id', wrap(async function(req, res, next) {
+  try {
+    const comments = await commentsdb.getAll(req.params.id);
+    if (comments !== null && comments.length > 0) {
+      // forEach not working here
+      //comments.forEach(function(c) {
+      for (let c of comments) { 
+        await commentsdb.deleteOne(c._id);
+      }
+      //});
+    }
+    console.log('post id', req.params.id);
+    await postsdb.deleteOne(req.params.id);
+    res.status(200).send();
+  } catch (err) {
+    console.log('deleting post error', err);
     res.status(404).send();
-  });
-});
+  }
+}));
 
 router.post('/', (req, res) => {
   console.log('request body for creating post', req.body);
