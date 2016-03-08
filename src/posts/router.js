@@ -47,12 +47,8 @@ router.delete('/:id', wrap(async function(req, res, next) {
   try {
     const comments = await commentsdb.getAll(req.params.id);
     if (comments !== null && comments.length > 0) {
-      // forEach not working here
-      //comments.forEach(function(c) {
-      for (let c of comments) { 
-        await commentsdb.deleteOne(c._id);
-      }
-      //});
+      const deletePromise = comments.map(c => commentsdb.deleteOne(c._id));
+      await Promise.all(deletePromise);
     }
     console.log('post id', req.params.id);
     await postsdb.deleteOne(req.params.id);
