@@ -3,6 +3,7 @@ import lodash from 'lodash';
 import postsdb from './postsdb';
 import {wrap} from '../utils/utils';
 import commentsdb from '../comments/commentsdb';
+import {NotFound} from '../errors/errors';
 
 const router = express.Router();
 
@@ -52,7 +53,7 @@ router.delete('/:id', wrap(async function(req, res, next) {
       await Promise.all(deletePromise);
     }
     const result =  await postsdb.deleteOne(req.params.id);
-    if (lodash.isEmpty(result)) return next(new Error(`cannot find post with ${req.params.id}`));
+    if (lodash.isEmpty(result)) return next(new NotFound(`cannot find post with ${req.params.id}`));
     res.status(200).send();
   } catch (err) {
     next(err);
@@ -89,6 +90,9 @@ router.put('/:id', (req, res)=>{
 });
 
 router.use((err, req, res, next)=>{
+  // instanceof doesn't work here because of babeljs, it should work in pure ES6 environment
+  console.log('error handler', err instanceof NotFound, err);
+  console.log('error code', err.code);
   res.status(404).send();
 });
 
