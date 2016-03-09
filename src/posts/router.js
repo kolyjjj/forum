@@ -47,15 +47,15 @@ router.delete('/:id', wrap(async function(req, res, next) {
   try {
     const comments = await commentsdb.getAll(req.params.id);
     if (comments !== null && comments.length > 0) {
+      console.log('deleting comments of posts', comments);
       const deletePromise = comments.map(c => commentsdb.deleteOne(c._id));
       await Promise.all(deletePromise);
     }
-    console.log('post id', req.params.id);
-    await postsdb.deleteOne(req.params.id);
+    const result =  await postsdb.deleteOne(req.params.id);
+    if (lodash.isEmpty(result)) return next(new Error(`cannot find post with ${req.params.id}`));
     res.status(200).send();
   } catch (err) {
-    console.log('deleting post error', err);
-    res.status(404).send();
+    next(err);
   }
 }));
 
@@ -86,6 +86,10 @@ router.put('/:id', (req, res)=>{
     }
     else res.status(500).json(err);
   })
-})
+});
+
+router.use((err, req, res, next)=>{
+  res.status(404).send();
+});
 
 export default router;
