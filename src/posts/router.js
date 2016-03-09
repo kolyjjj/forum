@@ -64,9 +64,7 @@ router.post('/', (req, res, next) => {
   console.log('request body for creating post', req.body);
   postsdb.save(req.body).then((data) => {
     res.status(200).json({id: data._id});
-  }, (err)=>{
-    next(err);
-  });
+  }, next);
 });
 
 router.put('/:id', (req, res, next)=>{
@@ -75,9 +73,7 @@ router.put('/:id', (req, res, next)=>{
     createResponseWhenPostNotFound(data, req.params.id, res, (data)=>{
       res.status(200).json(data);
     });
-  }, (err)=>{
-    next(err);
-  });
+  }, next);
 });
 
 router.use((err, req, res, next)=>{

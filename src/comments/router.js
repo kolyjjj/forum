@@ -27,7 +27,7 @@ router.post('/', wrap(async function (req, res, next) {
     let result = await commentsdb.save(aComment);
     res.status(200).json(result);
   } catch (err){
-    return next(err);
+    next(err);
   }
 }));
 
