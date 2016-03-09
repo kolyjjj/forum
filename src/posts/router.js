@@ -60,39 +60,32 @@ router.delete('/:id', wrap(async function(req, res, next) {
   }
 }));
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
   console.log('request body for creating post', req.body);
   postsdb.save(req.body).then((data) => {
     res.status(200).json({id: data._id});
   }, (err)=>{
-    console.log('creating post error', err);
-    if ('ValidationError' === err.name) {
-      let errorMessages = composeErrorJson(err.errors);
-      res.status(400).json(errorMessages);
-    }
-    else res.status(500).json(err);
+    next(err);
   });
 });
 
-router.put('/:id', (req, res)=>{
+router.put('/:id', (req, res, next)=>{
   console.log('request body for updating post', req.body);
   postsdb.update(req.params.id, req.body).then((data)=>{
     createResponseWhenPostNotFound(data, req.params.id, res, (data)=>{
       res.status(200).json(data);
     });
   }, (err)=>{
-    if ('ValidationError' === err.name) {
-      let errorMessages = composeErrorJson(err.errors);
-      res.status(400).json(errorMessages);
-    }
-    else res.status(500).json(err);
-  })
+    next(err);
+  });
 });
 
 router.use((err, req, res, next)=>{
   // instanceof doesn't work here because of babeljs, it should work in pure ES6 environment
   //console.log('error handler', err instanceof NotFound, err);
+  console.log('error handler for posts', err);
   if (err.type === 'NotFound' || err.name === 'CastError') return res.status(404).send();
+  if (err.name === 'ValidationError') return res.status(400).json(composeErrorJson(err.errors));
   res.status(500).send();
 });
 
