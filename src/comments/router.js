@@ -6,6 +6,7 @@ import co from 'co';
 import {wrap} from '../utils/utils';
 import commentsdb from './commentsdb';
 import postsdb from '../posts/postsdb';
+import {NotFound} from '../errors/errors';
 
 const router = express.Router({mergeParams: true});
 
@@ -19,17 +20,15 @@ router.get('/', (req, res)=>{
 });
 
 router.post('/', wrap(async function (req, res, next) {
-    try{
-      let aPost = await postsdb.getOne(req.params.id);
-      if (lodash.isEmpty(aPost)) return next();
-      let aComment = Object.assign({postId:req.params.id}, req.body); 
-      let result = await commentsdb.save(aComment);
-      res.status(200).json(result);
-    } catch (err){
-      console.log('err', err);
-      if (err.kind === 'ObjectId') return res.status(404).json({message: 'cannot find post id'});
-      res.status(400).json({message:'valiation error'});
-    }
+  try{
+    let aPost = await postsdb.getOne(req.params.id);
+    if (lodash.isEmpty(aPost)) return next(new NotFound(`cannot find post with ${req.params.id}`));
+    let aComment = Object.assign({postId:req.params.id}, req.body); 
+    let result = await commentsdb.save(aComment);
+    res.status(200).json(result);
+  } catch (err){
+    return next(err);
+  }
 }));
 
 router.put('/:commentId', (req, res, next) => {
@@ -52,13 +51,20 @@ router.put('/:commentId', (req, res, next) => {
 });
 
 router.delete('/:commentId', wrap(async function (req, res, next) {
- try {
-   await commentsdb.deleteOne(req.params.commentId);
-   res.status(200).send();
- } catch (err) {
-   console.log('delete comment error', err);
-   res.status(404).json({message: 'comment not found'});
- }
+  try {
+    const result = await commentsdb.deleteOne(req.params.commentId);
+    if (lodash.isEmpty(result)) return next(new NotFound(`cannot find comment with ${req.params.commentId}`));
+    res.status(200).send();
+  } catch (err) {
+    next(err);
+  }
 }));
+
+router.use((err, req, res, next)=>{
+  console.log('error handler for comments', err);
+  if (err.type === 'NotFound' || err.name === 'CastError') return res.status(404).send();
+  if (err.name === 'ValidationError') return res.status(400).json({message:'validation error'});
+  res.status(500).send();
+});
 
 export default router;
