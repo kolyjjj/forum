@@ -91,9 +91,9 @@ router.put('/:id', (req, res)=>{
 
 router.use((err, req, res, next)=>{
   // instanceof doesn't work here because of babeljs, it should work in pure ES6 environment
-  console.log('error handler', err instanceof NotFound, err);
-  console.log('error code', err.code);
-  res.status(404).send();
+  //console.log('error handler', err instanceof NotFound, err);
+  if (err.type === 'NotFound' || err.name === 'CastError') return res.status(404).send();
+  res.status(500).send();
 });
 
 export default router;
