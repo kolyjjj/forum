@@ -60,11 +60,4 @@ router.delete('/:commentId', wrap(async function (req, res, next) {
   }
 }));
 
-router.use((err, req, res, next)=>{
-  console.log('error handler for comments', err);
-  if (err.type === 'NotFound' || err.name === 'CastError') return res.status(404).send();
-  if (err.name === 'ValidationError') return res.status(400).json({message:'validation error'});
-  res.status(500).send();
-});
-
 export default router;

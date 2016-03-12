@@ -36,9 +36,21 @@ router.get('/', (req, res) => {
 router.use('/posts/', postRouter); 
 router.use('/posts/:id/comments/', commentRouter);
 
-router.post('*', (req, res, next)=>{
-  console.log('inceptor request', req.method, req.path);
-  res.status(404).send();
+let composeErrorJson = (errors) => {
+  let result = {};
+  for (let key in errors) {
+    result[key] = errors[key].message;
+  }
+  return result;
+};
+
+router.use((err, req, res, next)=>{
+  // instanceof doesn't work here because of babeljs, it should work in pure ES6 environment
+  //console.log('error handler', err instanceof NotFound, err);
+  console.log('error handler for posts', err);
+  if (err.type === 'NotFound' || err.name === 'CastError') return res.status(404).send();
+  if (err.name === 'ValidationError') return res.status(400).json(composeErrorJson(err.errors));
+  res.status(500).send();
 });
 
 export default router;
