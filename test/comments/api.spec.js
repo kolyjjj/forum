@@ -26,6 +26,10 @@ describe('comments operation', ()=>{
     .expect((res)=>{
       postId = res.body.id;
     })
+    .expect((err, res)=>{
+      if (err) throw err;
+      done();
+    })
     .expect(200, done);
   });
 

@@ -2,6 +2,7 @@ import express from 'express';
 import lodash from 'lodash';
 import postRouter from './posts/router';
 import commentRouter from './comments/router';
+import userRouter from './users/router';
 
 const router = express.Router();
 
@@ -35,6 +36,7 @@ router.get('/', (req, res) => {
 
 router.use('/posts/', postRouter); 
 router.use('/posts/:id/comments/', commentRouter);
+router.use('/users/', userRouter);
 
 let composeErrorJson = (errors) => {
   let result = {};
