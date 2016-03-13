@@ -4,7 +4,7 @@ import request from 'supertest';
 import should from 'should';
 import app from '../../app';
 
-describe.only('users api', ()=>{
+describe('users api', ()=>{
   let anUser = {
     "name": "koly",
     "accountId": "koly",
