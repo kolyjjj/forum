@@ -4,7 +4,7 @@ import request from 'supertest';
 import should from 'should';
 import app from '../../app';
 
-describe('users api', ()=>{
+describe.only('users api', ()=>{
   let anUser = {
     "name": "koly",
     "accountId": "koly",
@@ -23,6 +23,29 @@ describe('users api', ()=>{
       if (err) throw err;
       res.body.should.have.property('id') ;
       done();
+    });
+  });
+
+  it('should get a user', function(done) {
+    request(app)
+    .post('/api/users/')
+    .send(anUser)
+    .expect(200)
+    .end((err, res)=>{
+      if (err) throw err;
+      request(app)
+      .get('/api/users/' + res.body.id)
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        let body = res.body;
+        body.name.should.be.exactly('koly');
+        body.accountId.should.be.exactly('koly');
+        body.email.should.be.exactly('kolyjjj@163.com');
+        body.mobile.should.be.exactly('12345678901');
+        should(body.password).be.undefined();
+        done();
+      });
     });
   });
 });

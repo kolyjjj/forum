@@ -19,7 +19,7 @@ const createDefaultCRUD = (modelName, schema) => {
   return {
     save(data) {
       const aModel = new Model(filterInputWithSchema(data, schema));
-      return aModel;
+      return aModel.save();
     },
     update(id, data) {
       // TODO: should generate the data according to schema
