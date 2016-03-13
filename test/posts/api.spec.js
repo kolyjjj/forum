@@ -90,9 +90,9 @@ describe('/api/posts', ()=>{
       request(app)
       .put('/api/posts/' + res.body.id)
       .send({
-       "title":"updated post",
-       "author":"another author",
-       "content":"updated posts content"
+        "title":"updated post",
+        "author":"another author",
+        "content":"updated posts content"
       })
       .expect('Content-Type', /json/)
       .expect((res)=>{
@@ -156,6 +156,72 @@ describe('/api/posts', ()=>{
           .end(done);
         });
       });
+    });
+  });
+
+  describe('error handling', ()=>{
+    it('should return 404 when getting post with invalid post id', function(done){
+      request(app)
+      .get('/api/posts/123124')
+      .expect(404, done);
+    });
+
+    it('should return 404 when getting post with invalid post id which has same length', function(done){
+      let postId;
+      request(app)
+      .post('/api/posts')
+      .send(aPost)
+      .expect(200)
+      .expect(res => {
+        postId = res.body.id;
+      })
+      .end((err, res)=>{
+        if (err) throw err;
+        let newPostId = (postId + 'xxx').substring(3);
+        request(app)
+        .get('/api/posts/' + newPostId)
+        .expect(404, done);
+      });
+    });
+
+    it('should return 400 when creating post with invalid data', function(done){
+      request(app)
+      .post('/api/posts')
+      .send({
+        "title":"",
+        "author":"",
+        "content":"",
+        "comments":[],
+        "hidden": false,
+        "meta": {}
+      })
+      .expect(400)
+      .end((err, res)=>{
+        if (err) throw err;
+        console.log('creating post error', res.body);
+        res.body.should.be.deepEqual({
+          "content": "content cannot be empty.",
+          "author": "author cannot be empty.",
+          "title": "title cannot be empty."
+        });
+        done();
+      });
+    });
+
+    it('should return 404 when updating post with invalid post id', function(done){
+      request(app)
+      .put('/api/posts/123123')
+      .send({
+        "title":"one",
+        "content":"two"
+      })
+      .expect(404, done);
+    });
+
+    it('should return 404 when deleting post with invalid post id', function(done){
+      request(app)
+      .delete('/api/posts/12312')
+      .expect(404, done);
     });
   });
 });

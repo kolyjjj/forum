@@ -7,14 +7,6 @@ import {NotFound} from '../errors/errors';
 
 const router = express.Router();
 
-let composeErrorJson = (errors) => {
-  let result = {};
-  for (let key in errors) {
-    result[key] = errors[key].message;
-  }
-  return result;
-};
-
 let createResponseWhenPostNotFound = (data, id, res, successFunc) => {
   if (lodash.isEmpty(data)) {
     console.log('cannot find post with id', id);

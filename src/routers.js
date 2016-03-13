@@ -47,7 +47,7 @@ let composeErrorJson = (errors) => {
 router.use((err, req, res, next)=>{
   // instanceof doesn't work here because of babeljs, it should work in pure ES6 environment
   //console.log('error handler', err instanceof NotFound, err);
-  console.log('error handler for posts', err);
+  console.log('error handler', err);
   if (err.type === 'NotFound' || err.name === 'CastError') return res.status(404).send();
   if (err.name === 'ValidationError') return res.status(400).json(composeErrorJson(err.errors));
   res.status(500).send();
