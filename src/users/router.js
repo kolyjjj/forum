@@ -43,4 +43,13 @@ router.get('/', wrap(async function(req, res, next){
   }
 }));
 
+router.delete('/:id', wrap(async function(req, res, next){
+  try {
+    await usersdb.deleteOne(req.params.id);
+    res.status(200).send();
+  } catch (err) {
+    next(err);
+  }
+}));
+
 export default router;
