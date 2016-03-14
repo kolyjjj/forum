@@ -48,4 +48,17 @@ describe.only('users api', ()=>{
       });
     });
   });
+
+  it('should get a list of users', function(done){
+    request(app)
+    .get('/api/users')
+    .expect(200)
+    .expect('Content-Type', /json/)
+    .end((err, res) => {
+      if (err) throw err;
+      console.log('users', res.body);
+      res.body.should.be.an.instanceOf(Array);
+      done();
+    });
+  });
 });

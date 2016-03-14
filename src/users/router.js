@@ -33,4 +33,14 @@ router.get('/:id', wrap(async function(req, res, next){
   }
 }));
 
+router.get('/', wrap(async function(req, res, next){
+  try {
+    let result = await usersdb.getAll();
+    if (result === null) return next(new NotFound('cannot find users'));
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}));
+
 export default router;
