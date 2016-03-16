@@ -2,6 +2,7 @@
 
 import express from 'express';
 import lodash from 'lodash';
+import bcrypt from 'bcrypt-as-promised';
 import usersdb from './usersdb';
 import {wrap} from '../utils/utils';
 import {NotFound} from '../errors/errors';
@@ -11,6 +12,8 @@ const router = express.Router();
 router.post('/', wrap(async function(req, res, next){
   try {
     console.log('creating user', req.body);
+    let bcryptedPwd = await bcrypt.hash(req.body.password, 5);
+    req.body.password = bcryptedPwd;
     let result = await usersdb.save(req.body);
     console.log('result', result);
     res.status(200).json({id: result._id});
