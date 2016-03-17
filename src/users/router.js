@@ -46,6 +46,16 @@ router.get('/', wrap(async function(req, res, next){
   }
 }));
 
+router.put('/:id', wrap(async function(req, res, next) {
+  try {
+    let result = await usersdb.updateOne(req.params.id, req.body);
+    if (result === null) return next(new NotFound('cannot find user'));
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}));
+
 router.delete('/:id', wrap(async function(req, res, next){
   try {
     await usersdb.deleteOne(req.params.id);

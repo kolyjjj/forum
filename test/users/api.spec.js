@@ -76,6 +76,33 @@ describe('users api', ()=>{
       });
   });
 
+  it('should update a user', function(done) {
+    request(app)
+      .post('/api/users')
+      .send(anUser)
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        let userId = res.body.id;
+        console.log('user id', userId);
+        request(app)
+          .put('/api/users/'+userId)
+          .send({
+            "name": "koly.li",
+            "email": "email@email.com",
+            "mobile": "12345678901"
+          })
+        .expect(200)
+          .end((err, res) => {
+            if (err) throw err;
+            res.body.name.should.be.exactly("koly.li");
+            res.body.email.should.be.exactly("email@email.com");
+            res.body.mobile.should.be.exactly("12345678901");
+            done();
+          });
+      });
+  });
+
   it('should get a list of users', function(done){
     request(app)
       .get('/api/users')

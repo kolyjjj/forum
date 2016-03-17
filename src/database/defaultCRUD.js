@@ -22,8 +22,8 @@ const createDefaultCRUD = (modelName, schema) => {
       return aModel.save();
     },
     update(id, data) {
-      // TODO: should generate the data according to schema
-      return Model.findByIdAndUpdate(id, data);
+      console.log('updating model', id, data);
+      return Model.findByIdAndUpdate(id, data, {new: true});
     },
     getAll() {
       return Model.find({});

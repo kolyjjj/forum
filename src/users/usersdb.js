@@ -14,4 +14,14 @@ const schema = {
 
 const usersdb = createDefaultCRUD('User', schema);
 
+usersdb.updateOne = (id, data) => {
+  let result = {
+    "name": data.name,
+    "email": data.email,
+    "mobile": data.mobile,
+    "last_edit_time": Date.now()
+  };
+  return usersdb.update(id, result);
+};
+
 export default usersdb;
