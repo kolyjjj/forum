@@ -24,4 +24,11 @@ usersdb.updateOne = (id, data) => {
   return usersdb.update(id, result);
 };
 
+usersdb.updatePassword = (id, newPassword) => {
+    let result = {
+        "password": newPassword
+      };
+    return usersdb.update(id, result);
+  }
+
 export default usersdb;

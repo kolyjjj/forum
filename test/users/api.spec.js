@@ -124,8 +124,44 @@ describe('users api', ()=>{
         if (err) throw err;
         let userId = res.body.id;
         request(app)
-          .delete('/api/users/' + res.body.id)
+          .delete('/api/users/' + userId)
           .expect(200, done);
       });
   });
+
+  it('should change password', function(done) {
+    request(app)
+      .post('/api/users')
+      .send(anUser)
+      .expect(200)
+      .end((err, res)=> {
+        if (err) throw err;
+        let userId = res.body.id;
+        request(app)
+          .put('/api/users/' + userId + '/password')
+          .send({
+            "oldPassword":"123456",
+            "newPassword":"000abc"
+          })
+        .expect(200, done);
+      });
+  });
+
+  it('should return 400 given invalid old password', function(done) {
+      request(app)
+      .post('/api/users')
+      .send(anUser)
+      .expect(200)
+      .end((err, res) => {
+          if (err) throw err;
+          let userId = res.body.id;
+          request(app)
+          .put('/api/users/'+ userId + '/password')
+          .send({
+              "oldPassword": "123",
+              "newPassword": "alskdjflsk",
+            })
+          .expect(400, done);
+        });
+    });
 });

@@ -52,6 +52,7 @@ router.use((err, req, res, next)=>{
   console.log('error handler', err);
   if (err.type === 'NotFound' || err.name === 'CastError') return res.status(404).send();
   if (err.name === 'ValidationError') return res.status(400).json(composeErrorJson(err.errors));
+  if (err.type === 'PasswordNotMatch') return res.status(err.code).send();
   res.status(500).send();
 });
 

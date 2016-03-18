@@ -8,4 +8,12 @@ class NotFound extends Error {
   }
 }
 
-export {NotFound};
+class PasswordNotMatch extends Error {
+  constructor() {
+    super('password mismatch');
+    this.code = '400';
+    this.type = 'PasswordNotMatch';
+  }
+}
+
+export {NotFound, PasswordNotMatch};
