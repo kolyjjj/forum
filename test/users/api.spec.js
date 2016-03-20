@@ -53,7 +53,7 @@ describe('users api', ()=>{
       });
   });
 
-  it.only('should get a user', function(done) {
+  it('should get a user', function(done) {
     request(app)
       .post('/api/users/')
       .send(anUser)
