@@ -17,7 +17,7 @@ const knownOptions = {
 const options = minimist(process.argv.slice(2), knownOptions);
 const environmentPath = `env/${options.env}/*.js`;
 
-gulp.task('env', () => {
+gulp.task('env', _ => {
   return gulp.src(environmentPath)
   .pipe(cache.filter())
   .pipe(babel())
@@ -25,7 +25,7 @@ gulp.task('env', () => {
   .pipe(gulp.dest('tmp/env'));
 });
 
-gulp.task('compile', ['env'], () => {
+gulp.task('compile', ['env'], _ => {
 
   return gulp.src(['app.js', 'src/**/*.js', 'test/**/*.js'], {base: '.'})
   .pipe(cache.filter())
@@ -36,7 +36,7 @@ gulp.task('compile', ['env'], () => {
   .pipe(gulp.dest('tmp'));
 });
 
-gulp.task('start', ['compile'], () => {
+gulp.task('start', ['compile'], _ => {
   return nodemon({
     script: 'tmp/app.js',
     watch: ['src/**/*.js', 'app.js'],
@@ -44,9 +44,11 @@ gulp.task('start', ['compile'], () => {
   });
 });
 
-gulp.task('test', ['compile'], () => {
+gulp.task('test', ['compile'], _ => {
   return gulp.src('tmp/test/**/*.spec.js', {read:false})
   // gulp-mocha needs filepaths so you can't have any plugins before it
   .pipe(mocha({reporter:'nyan'}))
   .pipe(exit());
 });
+
+gulp.task('default', ['test'], _ => {});
