@@ -3,6 +3,7 @@ import lodash from 'lodash';
 import postRouter from './posts/router';
 import commentRouter from './comments/router';
 import userRouter from './users/router';
+import requestValidation from './validation/requestValidation';
 
 const router = express.Router();
 
@@ -34,6 +35,7 @@ router.get('/', (req, res) => {
   res.send('hello, welcome to the api');
 });
 
+router.use('*/', requestValidation);
 router.use('/posts/', postRouter); 
 router.use('/posts/:id/comments/', commentRouter);
 router.use('/users/', userRouter);

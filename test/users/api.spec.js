@@ -170,4 +170,19 @@ describe('users api', ()=>{
         .expect(400, done);
       });
   });
+
+  describe('invalid request', _ => {
+    it('should return 400 given empty fields  when creating user', function(done){
+      request(app)
+        .post('/api/users')
+        .send({
+          "name": "",
+          "accountId": "",
+          "password":"",
+          "email":"",
+          "mobile": ""
+        })
+        .expect(400, done);
+    });
+  });
 });
