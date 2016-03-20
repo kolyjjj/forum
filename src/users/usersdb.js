@@ -25,10 +25,18 @@ usersdb.updateOne = (id, data) => {
 };
 
 usersdb.updatePassword = (id, newPassword) => {
-    let result = {
-        "password": newPassword
-      };
-    return usersdb.update(id, result);
-  }
+  let result = {
+    "password": newPassword
+  };
+  return usersdb.update(id, result);
+};
+
+usersdb.getAllWithoutPasswordField = _ => {
+  return usersdb.getAll().select('-password');
+};
+
+usersdb.getOneWithoutPasswordField = userId => {
+    return usersdb.getOne(userId).select('-password');
+  };
 
 export default usersdb;

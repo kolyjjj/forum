@@ -26,7 +26,7 @@ const createDefaultCRUD = (modelName, schema) => {
       return Model.findByIdAndUpdate(id, data, {new: true});
     },
     getAll() {
-      return Model.find({});
+      return Model.find('-password');
     },
     getOne(id) {
       return Model.findById(id);

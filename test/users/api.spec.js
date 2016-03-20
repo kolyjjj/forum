@@ -53,7 +53,7 @@ describe('users api', ()=>{
       });
   });
 
-  it('should get a user', function(done) {
+  it.only('should get a user', function(done) {
     request(app)
       .post('/api/users/')
       .send(anUser)
@@ -105,13 +105,19 @@ describe('users api', ()=>{
 
   it('should get a list of users', function(done){
     request(app)
-      .get('/api/users')
+      .post('/api/users/')
+      .send(anUser)
       .expect(200)
-      .expect('Content-Type', /json/)
       .end((err, res) => {
-        if (err) throw err;
-        res.body.should.be.an.instanceOf(Array);
-        done();
+        request(app)
+          .get('/api/users')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end((err, res) => {
+            if (err) throw err;
+            res.body.should.be.an.instanceOf(Array);
+            done();
+          });
       });
   });
 
@@ -148,20 +154,20 @@ describe('users api', ()=>{
   });
 
   it('should return 400 given invalid old password', function(done) {
-      request(app)
+    request(app)
       .post('/api/users')
       .send(anUser)
       .expect(200)
       .end((err, res) => {
-          if (err) throw err;
-          let userId = res.body.id;
-          request(app)
+        if (err) throw err;
+        let userId = res.body.id;
+        request(app)
           .put('/api/users/'+ userId + '/password')
           .send({
-              "oldPassword": "123",
-              "newPassword": "alskdjflsk",
-            })
-          .expect(400, done);
-        });
-    });
+            "oldPassword": "123",
+            "newPassword": "alskdjflsk",
+          })
+        .expect(400, done);
+      });
+  });
 });
