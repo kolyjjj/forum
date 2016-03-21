@@ -1,29 +1,6 @@
 'use strict';
 
-const rules = {
-  createUser: {
-    method: 'POST',
-    url: '/api/users',
-    body: {
-      name: {
-        required: 'should be not empty',
-        minLength: [4, 'should be longer than 4 characters']
-      },
-      accountId: {
-        required: 'should not be empty',
-        minLength: [4, 'should be longer than 4 characters']
-      },
-      password: {
-        required: 'should not be empty',
-        minLength: [6, 'should be longer than 6 characters']
-      },
-      email: {
-        required: 'should not be empty',
-        minLength: [3, 'should be longer than 3 characters']
-      }
-    }
-  }
-};
+let gRules = {};
 
 const validationFunctions = {
   required(val) {
@@ -46,8 +23,8 @@ const requestValidation = function(req, res, next) {
   console.log('req method and base url', req.method, req.baseUrl);
   let errors = {};
 
-  for (let ruleIndex in rules) {
-    let currentRule = rules[ruleIndex];
+  for (let ruleIndex in gRules) {
+    let currentRule = gRules[ruleIndex];
     if (currentRule.method === req.method && currentRule.url === req.baseUrl) {
       let validations = currentRule.body;
       for (let k in req.body) {
@@ -74,4 +51,9 @@ const requestValidation = function(req, res, next) {
   next();
 };
 
-export default requestValidation;
+const kValidate = (rules) => {
+  gRules = rules;
+  return requestValidation;
+};
+
+export default kValidate;
