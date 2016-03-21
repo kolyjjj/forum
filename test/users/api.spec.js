@@ -182,7 +182,17 @@ describe('users api', ()=>{
           "email":"",
           "mobile": ""
         })
-        .expect(400, done);
+      .expect(400)
+        .end((err, res) => {
+          if (err) throw err;
+          res.body.should.be.deepEqual({
+            name: [ 'should be not empty', 'should be longer than 4 characters' ],
+            accountId: [ 'should not be empty', 'should be longer than 4 characters' ],
+            password: [ 'should not be empty', 'should be longer than 6 characters' ],
+            email: [ 'should not be empty', 'should be longer than 3 characters' ] 
+          })
+          done();
+        });
     });
   });
 });
