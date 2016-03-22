@@ -7,7 +7,6 @@ import usersdb from './usersdb';
 import {wrap} from '../utils/utils';
 import {NotFound, PasswordNotMatch} from '../errors/errors';
 import logger from '../logger/index';
-import util from 'util';
 
 const router = express.Router();
 
@@ -37,7 +36,7 @@ router.get('/:id', wrap(async function(req, res, next){
 router.get('/', wrap(async function(req, res, next){
   try {
     let result = await usersdb.getAllWithoutPasswordField();
-    console.log('getting users', result);
+    logger.debug('getting users', result);
     if (result === null) return next(new NotFound('cannot find users'));
     res.status(200).json(result);
   } catch (err) {

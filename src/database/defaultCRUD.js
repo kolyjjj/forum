@@ -2,6 +2,7 @@
 
 import createModel from './index';
 import lodash from 'lodash';
+import logger from '../logger/index'; 
 
 const filterInputWithSchema = (input, schema) => {
   let result = {};
@@ -22,11 +23,11 @@ const createDefaultCRUD = (modelName, schema) => {
       return aModel.save();
     },
     update(id, data) {
-      console.log('updating model', id, data);
+      logger.debug('updating model', id, data);
       return Model.findByIdAndUpdate(id, data, {new: true});
     },
     getAll() {
-      return Model.find('-password');
+      return Model.find();
     },
     getOne(id) {
       return Model.findById(id);

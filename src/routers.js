@@ -5,11 +5,12 @@ import commentRouter from './comments/router';
 import userRouter from './users/router';
 import kValidate from './validation/requestValidation';
 import rules from './validation/rules';
+import logger from './logger/index';
 
 const router = express.Router();
 
 router.use(function timeLog(req, res, next){
-  console.log('Time: ', Date.now());
+  logger.debug('Time:', Date.now());
   next();
 });
 
@@ -52,7 +53,7 @@ let composeErrorJson = (errors) => {
 router.use((err, req, res, next)=>{
   // instanceof doesn't work here because of babeljs, it should work in pure ES6 environment
   //console.log('error handler', err instanceof NotFound, err);
-  console.log('error handler', err);
+  logger.debug('error handler', err);
   if (err.type === 'NotFound' || err.name === 'CastError') return res.status(404).send();
   if (err.name === 'ValidationError') return res.status(400).json(composeErrorJson(err.errors));
   if (err.type === 'PasswordNotMatch') return res.status(err.code).send();

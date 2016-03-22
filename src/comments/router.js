@@ -7,6 +7,7 @@ import {wrap} from '../utils/utils';
 import commentsdb from './commentsdb';
 import postsdb from '../posts/postsdb';
 import {NotFound} from '../errors/errors';
+import logger from '../logger/index';
 
 const router = express.Router({mergeParams: true});
 
@@ -14,7 +15,7 @@ router.get('/', (req, res)=>{
   commentsdb.getAll(req.params.id).then((data)=>{
     res.status(200).json(data);
   }, (err)=>{
-    console.log('failed to get all comments', err);
+    logger.error('failed to get all comments', err);
     res.status(500).send();
   });
 });
@@ -41,11 +42,12 @@ router.put('/:commentId', (req, res, next) => {
     .then(data=>{
       res.status(200).send(data);
     }, err => {
-      console.log('fail to update comment', err);
+      logger.error('fail to update comment', err);
       res.status(400).send();
     });
   }, err => {
-    console.log('updating comments ' + req.params.commentId + ' error with post id ' + req.params.id);
+    logger.error('updating comments ' + req.params.commentId + ' error with post id ' + req.params.id);
+    
     res.status(404).json({message: 'cannot find post id.'});
   });
 });

@@ -35,7 +35,7 @@ describe('users api', ()=>{
       });
   });
 
-  it.only('should create a new user', function(done){
+  it('should create a new user', function(done){
     request(app)
       .post('/api/users/')
       .send(anUser)

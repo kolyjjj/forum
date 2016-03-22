@@ -1,5 +1,7 @@
 'use strict';
 
+import logger from '../logger/index';
+
 let gRules = {};
 
 const validationFunctions = {
@@ -19,8 +21,8 @@ const validateUsingValidationFunctions = (ruleName, val, option) => {
 };
 
 const requestValidation = function(req, res, next) {
-  console.log('request validation middleware');
-  console.log('req method and base url', req.method, req.baseUrl);
+  logger.debug('request validation middleware');
+  logger.debug('req method and base url', req.method, req.baseUrl);
   let errors = {};
 
   for (let ruleIndex in gRules) {
@@ -43,7 +45,8 @@ const requestValidation = function(req, res, next) {
     }
   }
 
-  console.log('errors', errors);
+  logger.debug('errors', errors);
+
   if (Object.keys(errors).length > 0 ) {
     res.status(400).send(errors);
     return;
