@@ -6,16 +6,18 @@ import bcrypt from 'bcrypt-as-promised';
 import usersdb from './usersdb';
 import {wrap} from '../utils/utils';
 import {NotFound, PasswordNotMatch} from '../errors/errors';
+import logger from '../logger/index';
+import util from 'util';
 
 const router = express.Router();
 
 router.post('/', wrap(async function(req, res, next){
   try {
-    console.log('creating user', req.body);
+    logger.debug('creating user', req.body);
     let bcryptedPwd = await bcrypt.hash(req.body.password, 5);
     req.body.password = bcryptedPwd;
     let result = await usersdb.save(req.body);
-    console.log('result', result);
+    logger.debug('result', util.inspect(result));
     res.status(200).json({id: result._id});
   } catch (err) {
     next(err);
