@@ -25,8 +25,8 @@
     "co": "^4.6.0",
     "express": "^4.13.4",
     "lodash": "^4.0.1",
-    "mongoose": "^4.3.7",
-    "winston": "^2.2.0"
+    "log4js": "^0.6.33",
+    "mongoose": "^4.3.7"
   },
   "devDependencies": {
     "async": "^1.5.2",

@@ -17,7 +17,7 @@ router.post('/', wrap(async function(req, res, next){
     let bcryptedPwd = await bcrypt.hash(req.body.password, 5);
     req.body.password = bcryptedPwd;
     let result = await usersdb.save(req.body);
-    logger.debug('result', util.inspect(result));
+    logger.debug('result', result);
     res.status(200).json({id: result._id});
   } catch (err) {
     next(err);
