@@ -36,7 +36,11 @@ usersdb.getAllWithoutPasswordField = _ => {
 };
 
 usersdb.getOneWithoutPasswordField = userId => {
-    return usersdb.getOne(userId).select('-password');
+  return usersdb.getOne(userId).select('-password');
+};
+
+usersdb.findByName = username => {
+    return usersdb.findBy({accountId: username});
   };
 
 export default usersdb;

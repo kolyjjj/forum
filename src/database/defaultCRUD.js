@@ -32,6 +32,9 @@ const createDefaultCRUD = (modelName, schema) => {
     getOne(id) {
       return Model.findById(id);
     },
+    findBy(criteria) {
+      return Model.findOne(criteria);
+    },
     deleteOne(id) {
       return Model.findByIdAndRemove(id);
     }

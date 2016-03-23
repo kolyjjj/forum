@@ -3,6 +3,7 @@ import lodash from 'lodash';
 import postRouter from './posts/router';
 import commentRouter from './comments/router';
 import userRouter from './users/router';
+import loginRouter from './users/login';
 import kValidate from './validation/requestValidation';
 import rules from './validation/rules';
 import logger from './logger/index';
@@ -41,6 +42,7 @@ router.use('*', kValidate(rules));
 router.use('/posts/', postRouter); 
 router.use('/posts/:id/comments/', commentRouter);
 router.use('/users/', userRouter);
+router.use('/login/', loginRouter);
 
 let composeErrorJson = (errors) => {
   let result = {};
