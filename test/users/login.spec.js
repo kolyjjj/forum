@@ -81,6 +81,12 @@ describe('authentication', () => {
       });
     });
 
+  it('should return 403 if not logged in', function(done) {
+      request(app)
+      .post('/api/users')
+      .send(anUser)
+      .expect(403, done);
+    });
 });
 
 

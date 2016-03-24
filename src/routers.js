@@ -1,3 +1,5 @@
+'use strict';
+
 import express from 'express';
 import lodash from 'lodash';
 import postRouter from './posts/router';
@@ -7,6 +9,7 @@ import loginRouter from './users/login';
 import kValidate from './validation/requestValidation';
 import rules from './validation/rules';
 import logger from './logger/index';
+import auth from './auth/index';
 
 const router = express.Router();
 
@@ -38,6 +41,7 @@ router.get('/', (req, res) => {
   res.send('hello, welcome to the api');
 });
 
+router.use(auth);
 router.use('*', kValidate(rules));
 router.use('/posts/', postRouter); 
 router.use('/posts/:id/comments/', commentRouter);
