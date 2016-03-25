@@ -5,7 +5,7 @@ import should from 'should';
 import async from 'async';
 import app from '../../app';
 
-describe.only('/api/posts', ()=>{
+describe('/api/posts', ()=>{
   let aPost = {
     "title":"A new Post B",
     "author":"koly",
@@ -18,17 +18,30 @@ describe.only('/api/posts', ()=>{
 
   before(function(done) {
     request(app)
-    .post('/api/login')
+    .post('/api/users')
     .send({
-        "username":"koly",
-        "password":"123456"
+      "name": "koly",
+      "accountId": "koly",
+      "password": "123456",
+      "email": "kolyjjj@163.com",
+      "mobile": "12345678901"
       })
     .expect(200)
     .end((err, res) => {
+      if (err) throw err;
+
+      request(app)
+      .post('/api/login')
+      .send({
+        "username":"koly",
+        "password":"123456"
+      })
+      .expect(200)
+      .end((err, res) => {
         if (err) throw err;
-        console.log('res body', res.body);
         token = res.body.token;
         done();
+        });
       });
   });
 
@@ -42,7 +55,6 @@ describe.only('/api/posts', ()=>{
         let deleteFuncs = [];
         res.body.forEach((value)=>{
           deleteFuncs.push((cb)=>{
-            console.log('deleting', value._id);
             request(app)
               .delete('/api/posts/'+value._id)
               .set('x-token', token)
@@ -54,7 +66,6 @@ describe.only('/api/posts', ()=>{
   });
 
   it('should get posts', function(done){
-    console.log('token is', token);
     request(app)
       .get('/api/posts')
       .set({'x-token': token}) // cannot use 'token' here without 'x', otherwise node will not recognise it
@@ -62,7 +73,6 @@ describe.only('/api/posts', ()=>{
       .expect('Content-Type', /json/)
       .end((err, res)=>{
         if (err) throw err;
-        console.log('getting posts');
         res.body.should.be.instanceof(Array);
         done();
       });
@@ -74,7 +84,6 @@ describe.only('/api/posts', ()=>{
       .send(aPost)
       .expect('Content-Type', /json/)
       .expect((res)=>{
-        console.log('creating one post');
         res.body.should.have.property('id');
       })
     .expect(200, done);
@@ -92,7 +101,6 @@ describe.only('/api/posts', ()=>{
           .get('/api/posts/' + res.body.id)
           .expect('Content-Type', /json/)
           .expect((res)=>{
-            console.log('getting a post');
             let body = res.body;
             body.title.should.be.exactly(aPost.title);
             body.author.should.be.exactly(aPost.author);
@@ -138,7 +146,6 @@ describe.only('/api/posts', ()=>{
       .expect(200)
       .end((err, res)=>{
         if (err) throw err;
-        console.log('deleting');
         request(app)
           .delete('/api/posts/'+res.body.id)
           .expect(200, done);
@@ -221,7 +228,6 @@ describe.only('/api/posts', ()=>{
       .expect(400)
         .end((err, res)=>{
           if (err) throw err;
-          console.log('creating post error', res.body);
           res.body.should.be.deepEqual({
             "content": "content cannot be empty.",
             "author": "author cannot be empty.",

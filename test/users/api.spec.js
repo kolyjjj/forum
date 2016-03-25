@@ -25,7 +25,6 @@ describe('users api', ()=>{
         let deleteFuncs = [];
         res.body.forEach(value => {
           deleteFuncs.push(cb => {
-            console.log('deleting user', value._id);
             request(app)
               .delete('/api/users/' + value._id)
               .expect(200, cb);
@@ -84,7 +83,6 @@ describe('users api', ()=>{
       .end((err, res) => {
         if (err) throw err;
         let userId = res.body.id;
-        console.log('user id', userId);
         request(app)
           .put('/api/users/'+userId)
           .send({

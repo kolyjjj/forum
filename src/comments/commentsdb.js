@@ -1,6 +1,7 @@
 'use strict';
 
 import createModel from '../database/index';
+import logger from '../logger/index';
 
 const schema = {
   post_id: {
@@ -41,7 +42,7 @@ const commentsdb = {
     return aComment.save();
   },
   update(id, data) {
-    console.log('commentsdb updating', id, data);
+    logger.debug('commentsdb updating', id, data);
     return Comment.findByIdAndUpdate(id, {
       author: data.author,
       content: data.content,

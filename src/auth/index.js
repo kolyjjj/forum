@@ -7,6 +7,7 @@ import {NotFound} from '../errors/errors';
 import logger from '../logger/index';
 import db from '../../env/db_config';
 import {wrap} from '../utils/utils';
+import authService from './service';
 
 const jwtVerify = (token) => new Promise((resolve, reject) => {
   jwt.verify(token, 'koly123', {}, function(err, decoded) {
@@ -15,14 +16,14 @@ const jwtVerify = (token) => new Promise((resolve, reject) => {
   });
 });
 
-const excluded = ['login', 'posts', 'comments', 'users'];
+const excluded = ['/api/login.*', '/api/posts.*', '/api/comments.*', '/api/users.*'];
+authService.setExcludedAction(excluded);
 
 const auth = wrap(async function(req, res, next) {
-  console.log('base url in auth module', req.originalUrl);
-  //if (excluded.indexOf(req.originalUrl.replace('/api/', '')) !== -1) return next();
+  logger.debug('auth module', req.method, req.originalUrl, authService.isExcludedAction(req.method, req.originalUrl));
+  //if (authService.isExcludedAction(req.method, req.originalUrl)) return next();
   if (true) return next();
   try {
-    console.log('token', req.header('x-token'), req.get('token'), req.cookie, req.params);
     const token = req.get('x-token') || req.cookie.token || req.params.token;
     const user = await jwtVerify(token);
     if (lodash.isEmpty(user)) throw new NotFound('cannot find user');
