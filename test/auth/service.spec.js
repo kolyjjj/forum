@@ -4,13 +4,21 @@ import should from 'should';
 import authService from '../../src/auth/service';
 
 describe('auth service', _ => {
+  let originalActions = [];
   before(function(){
+    originalActions = authService.excludedAction;
+    console.log('+++++++original actions', originalActions);
     authService.setExcludedAction([
         'post /api/posts',
         'get /api/posts/.+',
         '/api/comments',
         '/api/users.*'
     ]);
+  });
+
+  after(function(){
+    console.log('-----setting original actions back', originalActions);
+    authService.excludedAction = originalActions;
   });
 
   it('should return true given excluded action', function() {
