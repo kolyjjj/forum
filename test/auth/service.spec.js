@@ -7,7 +7,6 @@ describe('auth service', _ => {
   let originalActions = [];
   before(function(){
     originalActions = authService.excludedAction;
-    console.log('+++++++original actions', originalActions);
     authService.setExcludedAction([
         'post /api/posts',
         'get /api/posts/.+',
@@ -17,7 +16,6 @@ describe('auth service', _ => {
   });
 
   after(function(){
-    console.log('-----setting original actions back', originalActions);
     authService.excludedAction = originalActions;
   });
 

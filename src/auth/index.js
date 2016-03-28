@@ -17,13 +17,11 @@ const jwtVerify = (token) => new Promise((resolve, reject) => {
 });
 
 const excluded = ['/api/login.*', '/api/posts.*', '/api/comments.*', '/api/users.*'];
-console.log('setting excluded action', excluded);
 authService.setExcludedAction(excluded);
 
 const auth = wrap(async function(req, res, next) {
   logger.debug('auth module', req.method, req.originalUrl, authService.isExcludedAction(req.method, req.originalUrl));
   if (authService.isExcludedAction(req.method, req.originalUrl)) return next();
-  //if (true) return next();
   try {
     const token = req.get('x-token') || req.cookie.token || req.params.token;
     const user = await jwtVerify(token);
