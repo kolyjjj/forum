@@ -16,11 +16,11 @@ const jwtVerify = (token) => new Promise((resolve, reject) => {
   });
 });
 
-const excluded = ['/api/login.*', '/api/posts.*', '/api/comments.*', '/api/users.*'];
+const excluded = ['/api/login.*', 'delete /api/posts.*', 'put /api/posts.*', '/api/posts/.*/comments.*', '/api/users.*'];
 authService.setExcludedAction(excluded);
 
 const auth = wrap(async function(req, res, next) {
-  logger.debug('auth module', req.method, req.originalUrl, authService.isExcludedAction(req.method, req.originalUrl));
+  logger.debug('auth module', req.method, req.originalUrl, authService.isExcludedAction(req.method, req.originalUrl), req.get('x-token'), req.headers);
   if (authService.isExcludedAction(req.method, req.originalUrl)) return next();
   try {
     const token = req.get('x-token') || req.cookie.token || req.params.token;

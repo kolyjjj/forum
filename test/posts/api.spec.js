@@ -68,7 +68,7 @@ describe('/api/posts', ()=>{
   it('should get posts', function(done){
     request(app)
       .get('/api/posts')
-      .set({'x-token': token}) // cannot use 'token' here without 'x', otherwise node will not recognise it
+      .set('x-token', token) // cannot use 'token' here without 'x', otherwise node will not recognise it
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err, res)=>{
@@ -82,65 +82,77 @@ describe('/api/posts', ()=>{
     request(app)
       .post('/api/posts')
       .send(aPost)
+      .set('x-token', token)
+      .expect(200)
       .expect('Content-Type', /json/)
-      .expect((res)=>{
+      .end((err, res)=>{
+        if (err) throw err;
         res.body.should.have.property('id');
-      })
-    .expect(200, done);
+        done();
+      });
   });
 
   it('should get one post', function(done){
     request(app)
       .post('/api/posts')
+      .set('x-token', token)
       .send(aPost)
-      .expect('Content-Type', /json/)
       .expect(200)
+      .expect('Content-Type', /json/)
       .end((err, res)=>{
         if (err) throw err;
         request(app)
           .get('/api/posts/' + res.body.id)
+          .set('x-token', token)
+          .expect(200)
           .expect('Content-Type', /json/)
-          .expect((res)=>{
+          .end((err, res)=>{
+            if (err) throw err;
             let body = res.body;
             body.title.should.be.exactly(aPost.title);
             body.author.should.be.exactly(aPost.author);
             body.content.should.be.exactly(aPost.content);
-          })
-        .expect(200, done);
+            done();
+          });
       });
   });
 
   it('should update a post', function(done){
     request(app)
       .post('/api/posts')
+      .set('x-token', token)
       .send(aPost)
-      .expect('Content-Type', /json/)
       .expect(200)
+      .expect('Content-Type', /json/)
       .end((err, res)=>{
         if (err) throw err;
         request(app)
           .put('/api/posts/' + res.body.id)
+          .set('x-token', token)
           .send({
             "title":"updated post",
             "author":"another author",
             "content":"updated posts content"
           })
+          .expect(200)
         .expect('Content-Type', /json/)
-          .expect((res)=>{
+          .end((err, res)=>{
+            if (err) throw err;
             let body = res.body;
             body.title.should.be.exactly("updated post");
             body.author.should.be.exactly(aPost.author); // author cannot be udpated
             body.content.should.be.exactly("updated posts content");
             let timeDiff = Date.parse(body.last_edit_date) - Date.now();
             timeDiff.should.be.lessThan(10000); // 10000 is of scale milliseconds, which is 10 seconds
-          })
-        .expect(200, done);
+            done();
+          });
       });
   });
 
   it('should delete a post', function(done){
     request(app)
       .post('/api/posts')
+      .set('x-token', token)
       .send(aPost)
       .expect('Content-Type', /json/)
       .expect(200)
@@ -160,14 +172,16 @@ describe('/api/posts', ()=>{
     let postId;
     request(app)
       .post('/api/posts')
+      .set('x-token', token)
       .send(aPost)
-      .expect('Content-Type', /json/)
       .expect(200)
+      .expect('Content-Type', /json/)
       .end((err, res)=>{
         if (err) throw err;
         postId = res.body.id;
         request(app)
           .post('/api/posts/'+postId+'/comments')
+          .set('x-token', token)
           .send(aComment)
           .expect(200)
           .end((err, res)=>{
@@ -179,6 +193,7 @@ describe('/api/posts', ()=>{
                 if (err) throw err;
                 request(app)
                   .get('/api/posts/'+postId+'/comments')
+                  .set('x-token', token)
                   .expect(200)
                   .expect((res)=>{
                     res.body.should.be.deepEqual([]);
@@ -193,6 +208,7 @@ describe('/api/posts', ()=>{
     it('should return 404 when getting post with invalid post id', function(done){
       request(app)
         .get('/api/posts/123124')
+        .set('x-token', token)
         .expect(404, done);
     });
 
@@ -200,6 +216,7 @@ describe('/api/posts', ()=>{
       let postId;
       request(app)
         .post('/api/posts')
+        .set('x-token', token)
         .send(aPost)
         .expect(200)
         .expect(res => {
@@ -210,6 +227,7 @@ describe('/api/posts', ()=>{
         let newPostId = (postId + 'xxx').substring(3);
         request(app)
           .get('/api/posts/' + newPostId)
+          .set('x-token', token)
           .expect(404, done);
       });
     });
@@ -217,6 +235,7 @@ describe('/api/posts', ()=>{
     it('should return 400 when creating post with invalid data', function(done){
       request(app)
         .post('/api/posts')
+        .set('x-token', token)
         .send({
           "title":"",
           "author":"",
@@ -240,6 +259,7 @@ describe('/api/posts', ()=>{
     it('should return 404 when updating post with invalid post id', function(done){
       request(app)
         .put('/api/posts/123123')
+        .set('x-token', token)
         .send({
           "title":"one",
           "content":"two"
@@ -250,6 +270,7 @@ describe('/api/posts', ()=>{
     it('should return 404 when deleting post with invalid post id', function(done){
       request(app)
         .delete('/api/posts/12312')
+        .set('x-token', token)
         .expect(404, done);
     });
   });

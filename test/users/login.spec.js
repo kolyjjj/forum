@@ -81,10 +81,17 @@ describe('authentication', () => {
       });
     });
 
-  xit('should return 403 if not logged in', function(done) {
+  it('should return 403 if not logged in', function(done) {
       request(app)
-      .post('/api/users')
-      .send(anUser)
+      .post('/api/posts')
+      .send({
+          "title":"A new post b",
+          "author":"koly",
+          "content":"Hello this is a post",
+          "comments":[],
+          "hidden":false,
+          "meta":{}
+        })
       .expect(403, done);
     });
 });

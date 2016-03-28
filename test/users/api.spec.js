@@ -38,8 +38,8 @@ describe('users api', ()=>{
     request(app)
       .post('/api/users/')
       .send(anUser)
-      .expect('Content-Type', /json/)
       .expect(200)
+      .expect('Content-Type', /json/)
       .end((err, res)=>{
         if (err) throw err;
         res.body.should.have.property('id');
