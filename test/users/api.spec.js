@@ -14,12 +14,43 @@ describe('users api', ()=>{
     "email":"kolyjjj@163.com",
     "mobile": "12345678901"
   };
+  let token;
+
+  before(function(done) {
+    request(app)
+    .post('/api/users')
+    .send({
+      "name": "koly",
+      "accountId": "koly",
+      "password": "123456",
+      "email": "kolyjjj@163.com",
+      "mobile": "12345678901"
+      })
+    .expect(200)
+    .end((err, res) => {
+      if (err) throw err;
+
+      request(app)
+      .post('/api/login')
+      .send({
+        "username":"koly",
+        "password":"123456"
+      })
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        token = res.body.token;
+        done();
+        });
+      });
+  });
 
   after(function(done){
     request(app)
       .get('/api/users')
-      .expect('Content-Type', /json/)
+      .set('x-token', token)
       .expect(200)
+      .expect('Content-Type', /json/)
       .end((err, res)=>{
         if (err) throw err;
         let deleteFuncs = [];
@@ -27,6 +58,7 @@ describe('users api', ()=>{
           deleteFuncs.push(cb => {
             request(app)
               .delete('/api/users/' + value._id)
+              .set('x-token', token)
               .expect(200, cb);
           });
         });
@@ -85,6 +117,7 @@ describe('users api', ()=>{
         let userId = res.body.id;
         request(app)
           .put('/api/users/'+userId)
+          .set('x-token', token)
           .send({
             "name": "koly.li",
             "email": "email@email.com",
@@ -109,6 +142,7 @@ describe('users api', ()=>{
       .end((err, res) => {
         request(app)
           .get('/api/users')
+          .set('x-token', token)
           .expect(200)
           .expect('Content-Type', /json/)
           .end((err, res) => {
@@ -129,6 +163,7 @@ describe('users api', ()=>{
         let userId = res.body.id;
         request(app)
           .delete('/api/users/' + userId)
+          .set('x-token', token)
           .expect(200, done);
       });
   });
@@ -143,6 +178,7 @@ describe('users api', ()=>{
         let userId = res.body.id;
         request(app)
           .put('/api/users/' + userId + '/password')
+          .set('x-token', token)
           .send({
             "oldPassword":"123456",
             "newPassword":"000abc"
@@ -161,6 +197,7 @@ describe('users api', ()=>{
         let userId = res.body.id;
         request(app)
           .put('/api/users/'+ userId + '/password')
+          .set('x-token', token)
           .send({
             "oldPassword": "123",
             "newPassword": "alskdjflsk",

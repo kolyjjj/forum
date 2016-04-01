@@ -17,7 +17,7 @@ const jwtVerify = (token) => new Promise((resolve, reject) => {
 });
 
 //TODO: change the excluded to ['post /api/login.*', 'post /api/users.*']
-const excluded = ['/api/login.*', '/api/posts/.*/comments.*', 'post /api/users.*', 'get /api/users/\d+'];
+const excluded = ['/api/login.*', '/api/posts/.*/comments.*', 'post /api/users.*', 'get /api/users/.+'];
 authService.setExcludedAction(excluded);
 
 const auth = wrap(async function(req, res, next) {
