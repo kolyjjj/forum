@@ -160,6 +160,7 @@ describe('/api/posts', ()=>{
         if (err) throw err;
         request(app)
           .delete('/api/posts/'+res.body.id)
+          .set('x-token', token)
           .expect(200, done);
       });
   });
@@ -188,6 +189,7 @@ describe('/api/posts', ()=>{
             if (err) throw err;
             request(app)
               .delete('/api/posts/'+postId)
+              .set('x-token', token)
               .expect(200)
               .end((err, res)=>{
                 if (err) throw err;
