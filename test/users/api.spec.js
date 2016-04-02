@@ -151,6 +151,8 @@ describe('users api', ()=>{
           .end((err, res) => {
             if (err) throw err;
             res.body.should.be.an.instanceOf(Array);
+            should(res.body[0].password).be.undefined();
+            should(res.body[0].role).be.undefined();
             done();
           });
       });

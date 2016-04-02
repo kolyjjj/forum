@@ -33,7 +33,7 @@ usersdb.updatePassword = (id, newPassword) => {
 };
 
 usersdb.getAllWithoutPasswordField = _ => {
-  return usersdb.getAll().select('-password');
+  return usersdb.getAll().select('-password -role');
 };
 
 usersdb.getOneWithoutPasswordField = userId => {
