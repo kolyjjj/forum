@@ -12,7 +12,8 @@ describe('users api', ()=>{
     "accountId": "koly",
     "password":"123456",
     "email":"kolyjjj@163.com",
-    "mobile": "12345678901"
+    "mobile": "12345678901",
+    "role": "common"
   };
   let token;
 
@@ -24,7 +25,8 @@ describe('users api', ()=>{
       "accountId": "koly",
       "password": "123456",
       "email": "kolyjjj@163.com",
-      "mobile": "12345678901"
+      "mobile": "12345678901",
+      "role": "admin" 
       })
     .expect(200)
     .end((err, res) => {
@@ -102,6 +104,7 @@ describe('users api', ()=>{
             body.email.should.be.exactly('kolyjjj@163.com');
             body.mobile.should.be.exactly('12345678901');
             should(body.password).be.undefined();
+            should(body.role).be.undefined();
             done();
           });
       });

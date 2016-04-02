@@ -8,6 +8,7 @@ const schema = {
   password: String,
   email: String,
   mobile: String,
+  role: String,
   create_time: Date,
   last_edit_time: Date
 };
@@ -19,7 +20,7 @@ usersdb.updateOne = (id, data) => {
     "name": data.name,
     "email": data.email,
     "mobile": data.mobile,
-    "last_edit_time": Date.now()
+    "last_edittime": Date.now()
   };
   return usersdb.update(id, result);
 };
@@ -36,11 +37,11 @@ usersdb.getAllWithoutPasswordField = _ => {
 };
 
 usersdb.getOneWithoutPasswordField = userId => {
-  return usersdb.getOne(userId).select('-password');
+  return usersdb.getOne(userId).select('-password -role');
 };
 
 usersdb.findByName = username => {
-    return usersdb.findBy({accountId: username});
-  };
+  return usersdb.findBy({accountId: username});
+};
 
 export default usersdb;
